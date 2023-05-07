@@ -1,0 +1,31 @@
+.debug_window {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: black;
+  color: white;
+  padding: 10px;
+  z-index: 999;
+}
+
+.debug_window_enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.debug_window_enter_active {
+  opacity: 1;
+  transform: translateX(0%);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.debug_window_exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.debug_window_exit_active {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: opacity 300ms, transform 300ms;
+}
