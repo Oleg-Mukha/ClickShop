@@ -12,6 +12,7 @@ import {
 import storage from "redux-persist/lib/storage";
 import clickShopReducer from "./clickShopSlice";
 
+
 const persistConfig = {
   key: "root",
   version: 1,
@@ -30,3 +31,4 @@ export const store = configureStore({
 });
 
 export let persistor = persistStore(store);
+

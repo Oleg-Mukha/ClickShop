@@ -1,36 +1,58 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import ProductsCard from "../components/ProductsCard";
 import { paginationData } from "../api/Api";
 import Spinner from "../components/Spinner";
 import RoundedPriceProvider from "../context/RoundedPriceProvider";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setQuery,
+  setCategory,
+  setProductList,
+  setCategories,
+} from "../redux/clickShopSlice";
 
 const Shop = () => {
-  const [query, setQuery] = useState("");
-  const [category, setCategory] = useState("");
-  const [productList, setProductList] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  const query = useSelector((state) => state.clickShop.query);
+  const category = useSelector((state) => state.clickShop.category);
+  const productList = useSelector((state) => state.clickShop.productList);
+  const categories = useSelector((state) => state.clickShop.categories);
+
   const [limit, setLimit] = useState(30);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await paginationData(limit);
       if (data) {
-        setProductList(
-          data.products.filter(
-            (product) =>
-              product.title.toLowerCase().includes(query.toLowerCase()) &&
-              product.category.toLowerCase().includes(category.toLowerCase())
-          )
+        const filteredProductList = data.products.filter(
+          (product) =>
+            product.title.toLowerCase().includes(query.toLowerCase()) &&
+            product.category.toLowerCase().includes(category.toLowerCase())
         );
+        dispatch(setProductList(filteredProductList));
+
         const categoriesSet = new Set();
-        data.products.forEach((product) => categoriesSet.add(product.category));
-        setCategories(Array.from(categoriesSet));
+        filteredProductList.forEach((product) =>
+          categoriesSet.add(product.category)
+        );
+        dispatch(setCategories(Array.from(categoriesSet)));
       }
       setLoading(false);
     };
     fetchData();
-  }, [query, category, limit]);
+  }, [query, category, limit, dispatch]);
+
+  const handleQueryChange = (event) => {
+    const newQuery = event.target.value;
+    dispatch(setQuery(newQuery));
+  };
+
+  const handleCategoryChange = (event) => {
+    const newCategory = event.target.value;
+    dispatch(setCategory(newCategory));
+  };
 
   const handlePaginationClick = () => {
     setLimit(limit + 20);
@@ -55,14 +77,14 @@ const Shop = () => {
                 placeholder="Search product..."
                 className="border border-gray-500 rounded p-2 w-full sm:w-60 my-2 md:w-80 lg:w-96"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={handleQueryChange}
               />
             </div>
             <div>
               <select
                 className="border border-gray-500 rounded p-2 w-full sm:w-60 my-2 md:w-80 lg:w-96"
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={handleCategoryChange}
               >
                 <option value="">All categories</option>
                 {categories.map((cat) => (

@@ -50,5 +50,5 @@ const Products = ({ products }) => {
     </div>
   );
 };
-// 🛍️📱💻🖥️📷🎥📺🎧🎮📖📦
+
 export default Products;

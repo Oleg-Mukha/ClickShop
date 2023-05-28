@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addUser, removeUser } from "../redux/clickShopSlice";
 import { useNavigate } from "react-router-dom";
 import { githubLogo, googleLogo } from "../assets";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -120,7 +121,7 @@ const Login = () => {
           />
         </Space>
       </Modal>
-
+        
       <div className="w-full flex flex-col items-center justify-center gap-10 py-20">
         <div className="w-full flex items-center justify-center gap-10">
           <button
@@ -162,6 +163,15 @@ const Login = () => {
             </button>
           )}
         </div>
+        <p>
+          Don't have an account?{" "}
+          <Link
+            to="/register"
+            style={{ color: "blue", textDecoration: "underline" }}
+          >
+            Register now
+          </Link>
+        </p>
         <ToastContainer
           position="top-left"
           autoClose={2000}

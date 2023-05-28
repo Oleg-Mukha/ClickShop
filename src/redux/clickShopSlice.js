@@ -2,6 +2,11 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   productData: [],
   userInfo: null,
+
+  query: "",
+  category: "",
+  productList: [],
+  categories: [],
 };
 
 export const clickShopSlice = createSlice({
@@ -46,7 +51,6 @@ export const clickShopSlice = createSlice({
       state.productData = [];
     },
 
-
     addUser: (state, action) => {
       state.userInfo = action.payload;
     },
@@ -54,6 +58,22 @@ export const clickShopSlice = createSlice({
       state.userInfo = null;
     },
 
+    setQuery: (state, action) => {
+      console.log("Before reducer: ", state.query);
+      state.query = action.payload;
+      console.log("After reducer: ", state.query);
+    },
+    setCategory: (state, action) => {
+      console.log("Before reducer: ", state.category);
+      state.category = action.payload;
+      console.log("After reducer: ", state.category);
+    },
+    setProductList: (state, action) => {
+      state.productList = action.payload;
+    },
+    setCategories: (state, action) => {
+      state.categories = action.payload;
+    },
   },
 });
 
@@ -65,6 +85,11 @@ export const {
   decrementQuantity,
   addUser,
   removeUser,
+
+  setQuery,
+  setCategory,
+  setProductList,
+  setCategories,
 } = clickShopSlice.actions;
 
 export default clickShopSlice.reducer;

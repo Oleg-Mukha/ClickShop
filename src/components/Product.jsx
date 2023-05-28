@@ -5,6 +5,9 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/clickShopSlice";
 import { ToastContainer, toast } from "react-toastify";
 
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
 import useProductDetailsHook from "../hooks/useProductDetailsHook";
 import useExchangeRateHook from "../hooks/useExchangeRateHook";
 import useQuantityHook from "../hooks/useQuantityHook";
@@ -18,6 +21,10 @@ const Product = () => {
   const location = useLocation();
   const { item } = location.state;
 
+  const validationSchema = Yup.object().shape({
+    comment: Yup.string().required("Comment is required"),
+  });
+
   const [isLoading, setIsLoading] = useState(true);
   const details = useProductDetailsHook(item.id);
 
@@ -28,19 +35,24 @@ const Product = () => {
   }, [details]);
 
   const [quantity, handleIncrement, handleDecrement] = useQuantityHook(1);
-  const [comment, setComment] = useState("");
+  // const [comment, setComment] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(`Submitting comment: ${comment}`);
-    setComment("");
-    alert(
-      `Your feedback: '${comment}' added successfully! Sent for moderation review`
-    );
-  };
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   console.log(`Submitting comment: ${comment}`);
+  //   setComment("");
+  //   alert(
+  //     `Your feedback: '${comment}' added successfully! Sent for moderation review`
+  //   );
+  // };
 
-  const handleCommentChange = (event) => {
-    setComment(event.target.value);
+  // const handleCommentChange = (event) => {
+  //   setComment(event.target.value);
+  // };
+
+  const handleSubmit = (values) => {
+    console.log(`Submitting comment: ${values.comment}`);
+    alert(`Your feedback: '${values.comment}' added successfully! Sent for moderation review`);
   };
 
   useEffect(() => {
@@ -158,7 +170,8 @@ const Product = () => {
 
               <div className="mt-8">
                 <h3 className="text-lg font-medium mb-2">Leave a comment</h3>
-                <form onSubmit={handleSubmit}>
+               
+                {/* <form onSubmit={handleSubmit}>
                   <div>
                     <textarea
                       cols="30"
@@ -175,7 +188,37 @@ const Product = () => {
                   >
                     Submit
                   </button>
-                </form>
+                </form> */}
+
+                <Formik
+                  initialValues={{
+                    comment: "",
+                  }}
+                  validationSchema={validationSchema}
+                  onSubmit={(values, { resetForm }) => {
+                    handleSubmit(values);
+                    resetForm();
+                  }}
+                >
+                  <Form>
+                    <div>
+                      <Field
+                        as="textarea"
+                        id="comment"
+                        name="comment"
+                        placeholder="Enter your comment here..."
+                        className="w-full h-40 border border-gray-400 rounded-lg py-2 px-4 mb-4 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                      />
+                      <ErrorMessage
+                        name="comment"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+                    <button type="submit" className="bg-black text-white py-3 px-6 active:bg-gray-800">Leave a comment</button>
+                  </Form>
+                </Formik>
+
               </div>
             </div>
           </div>
